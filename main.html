@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surprise For My Love</title>
+    <style>
+        /* --- CSS Styling --- */
+        body {
+            font-family: 'Arial', sans-serif;
+            
+            /* --- BACKGROUND IMAGE ADDED HERE --- */
+            background-image: url('bg.png'); /* Assumes bg.png is in the same folder */
+            background-repeat: repeat;
+            background-size: auto;
+            background-attachment: fixed; /* Ensures the background doesn't scroll with content */
+            background-color: #f7e6e6; /* Fallback color */
+            /* ------------------------------------- */
+
+            color: #4a235a; /* Deep purple text */
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            transition: background-color 0.5s;
+        }
+
+        /* Styling for the initial "Welcome" screen */
+        #initial-message {
+            font-size: 3em;
+            font-weight: bold;
+            color: #d95379; /* A sweet rose color */
+            opacity: 1;
+            transition: opacity 0.1s, transform 0.1s; /* Faster transition */
+            /* Ensure the message is readable over the pattern */
+            background-color: rgba(255, 255, 255, 0.7); /* Slight white background for contrast */
+            padding: 15px 30px;
+            border-radius: 15px;
+        }
+
+        /* Styling for the main content area */
+        #main-content {
+            display: none; /* Starts hidden */
+            width: 90%;
+            max-width: 800px;
+            background-color: #ffffff; /* Use solid white for the main container to contrast with the background image */
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-top: 20px;
+            animation: fadeIn 1.5s ease-out; /* Animation when it appears */
+        }
+
+        /* Keyframes for the fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Button container for the header */
+        #button-header {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0b7c7; /* Light border */
+        }
+
+        /* Button styling */
+        .nav-button {
+            background-color: #ffcccc; /* Lightest pink for buttons */
+            color: #d95379;
+            border: 2px solid #d95379;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .nav-button:hover {
+            background-color: #d95379; /* Darker pink on hover */
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Styling for the output area */
+        #output-area {
+            min-height: 250px;
+            text-align: left;
+            padding: 20px;
+            border: 1px dashed #f0b7c7;
+            border-radius: 10px;
+            background-color: #fffafa; /* Very light background for content */
+        }
+
+        #output-area h2 {
+            color: #d95379;
+            margin-top: 0;
+            border-bottom: 1px solid #f0b7c7;
+            padding-bottom: 10px;
+        }
+
+        /* NEW STYLES for the clickable song list item */
+        .song-link-container {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background-color: #fce4ec; /* Light pink background like the image */
+            border-radius: 10px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+        .song-link-container:hover {
+            background-color: #f7b2c7; /* Slightly darker pink on hover */
+        }
+        .song-icon {
+            font-size: 1.5em;
+            color: #7b1fa2; /* Purple music icon */
+            margin-right: 15px;
+            vertical-align: middle;
+        }
+        .song-title-text {
+            display: inline-block;
+            font-weight: bold;
+            color: #4a235a;
+        }
+        .song-artist {
+            display: block;
+            font-size: 0.9em;
+            font-weight: normal;
+            color: #7b1fa2; /* Purple text for artist name */
+        }
+    </style>
+</head>
+<body>
+
+    <div id="initial-message">
+        Welcome, my Love ❤️
+    </div>
+
+    <div id="main-content">
+        
+        <div id="button-header">
+            <button class="nav-button" onclick="showContent('love_letter')">
+                <span style="font-size: 1.5em;">💌</span> Love Letter
+            </button>
+            <button class="nav-button" onclick="showContent('music')">
+                <span style="font-size: 1.5em;">🎶</span> Music
+            </button>
+            <button class="nav-button" onclick="showContent('notes')">
+                <span style="font-size: 1.5em;">📝</span> Notes
+            </button>
+            <button class="nav-button" onclick="showContent('gallery')">
+                <span style="font-size: 1.5em;">🖼️</span> Gallery
+            </button>
+        </div>
+
+        <div id="output-area">
+            <h2>Dearest, A Letter For You</h2>
+            <p>Click any button above to reveal a special surprise!</p>
+        </div>
+    </div>
+
+    <script>
+        // --- JavaScript Functionality ---
+
+        // 1. Logic for the 1-second delay
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialMessage = document.getElementById('initial-message');
+            const mainContent = document.getElementById('main-content');
+            
+            // Wait for 1000 milliseconds (1 second)
+            setTimeout(() => {
+                // Fade out the initial message
+                initialMessage.style.opacity = '0';
+                initialMessage.style.transform = 'scale(0.8)';
+                
+                // After the fade-out transition is complete (0.1 second from CSS), hide it and show the main content
+                setTimeout(() => {
+                    initialMessage.style.display = 'none';
+                    mainContent.style.display = 'block';
+                }, 100); // 0.1 second transition from CSS
+            }, 1000); // 1 second delay for the whole transition to start
+        });
+
+
+        // 2. Logic for button clicks
+        function showContent(section) {
+            const outputArea = document.getElementById('output-area');
+            let contentHTML = '';
+
+            // The YouTube URL for the song
+            const youtubeUrl = 'https://www.youtube.com/watch?v=GhQxrCrVSyw'; 
+
+            switch (section) {
+                case 'love_letter':
+                    contentHTML = `
+                        <h2>💌 My  Love Letter</h2>
+                        <p>Hi Love, I can see how incredibly hardworking you are. I know you're dealing with a lot right now and it must be stressful, but please know that I am so incredibly proud of you and everything you're doing.</p>
+                        <p>Thank you for being you. You make my world infinitely brighter.</p>
+                        <p style="text-align: right;">— Forever Yours</p>
+                    `;
+                    break;
+                case 'music':
+                    // This section creates the list look for the single song, making the whole entry clickable
+                    contentHTML = `
+                        <h2>🎶 Songs that remind me of you</h2>
+                        
+                        <a href="${youtubeUrl}" target="_blank" class="song-link-container">
+                            <span class="song-icon">🎵</span>
+                            <div class="song-title-text">
+                                Until I Found You
+                                <span class="song-artist">by Stephen Sanchez</span>
+                            </div>
+                        </a>
+                        
+                        <p style="text-align: center; color: #888; margin-top: 30px;">
+                            Click the song above to play!
+                        </p>
+                    `;
+                    break;
+                case 'notes':
+                    contentHTML = `
+                        <h2>📝 Important Notes and Reminders</h2>
+                        <ul>
+                            <li>**Date Night:** Tonight right after your review.</li>
+                            <li>**Future Goal:** Let's plan everything about us.</li>
+                            <li>**Always Remember:** I love you more than all the stars!</li>
+                        </ul>
+                    `;
+                    break;
+                case 'gallery':
+                    contentHTML = `
+                        <h2>🖼️ Photo Gallery</h2>
+                        <p>Photos of you lovey!</p>
+                        <div style="display: flex; gap: 10px; justify-content: center; margin-top: 15px;">
+                            <img src="1.jpeg" alt="Our First Date" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 3px solid #f0b7c7;">
+                            <img src="2.jpeg" alt="Our Favorite Vacation" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 3px solid #f0b7c7;">
+                            <img src="4.jpg" alt="A Funny Moment" style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 3px solid #f0b7c7;">
+                        </div>
+                                            `;
+                    break;
+                default:
+                    contentHTML = `<h2>Error</h2><p>Content not found.</p>`;
+            }
+
+            outputArea.innerHTML = contentHTML;
+        }
+
+        // Set the default content to be the "Love Letter" when the main page loads (optional)
+        setTimeout(() => showContent('love_letter'), 1500); 
+    </script>
+</body>
+</html>
